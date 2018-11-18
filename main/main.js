@@ -3,26 +3,25 @@ var sunSize = 1391000;
 var myDatas = [];
 var spaceship;
 var shipVal ={value: 10};
-var animation ={init: 1542426837328, isActive:false , date: 'Arroz'};
+var animation ={init: Date.now(), isActive:false , date: ''};
 
-var sunData = constructObjData(1, 0, 27/86400, 0, "sun", 1);
+var sunData = constructObjData(1, 0, 27/86400, 0, "Sun", 1);
 var earthPosition  = new THREE.Vector3();
 var distance_factor ={value: 1};
 var last = -1;
 var gui = new dat.GUI();
 var folder2 = gui.addFolder('Planets');
-var mercuryData = constructObjData(4880 / sunSize, 87.97, 58.65 / 86400, 57910000 / 2, "mercury", 4880 / sunSize * 10);
+var mercuryData = constructObjData(4880 / sunSize, 87.97, 58.65 / 86400, 57910000 / 2, "Mercury", 4880 / sunSize * 10);
 var venusData = constructObjData(12104 / sunSize, 224.7, -243 / 86400, 108200000 / 2, "venus", 12104 / sunSize * 10);
-var earthData = constructObjData(12742 / sunSize, 365.2564, 1 / 86400, 149600000 / 2, "earth", 12742 / sunSize * 10);
-var moonData = constructObjData(3474 / sunSize, 27.5, 27 / 86400, 146000000 / 2, "moon", 3474 / sunSize * 10);
-var marsData = constructObjData(6800 / sunSize, 689.98, 1026 / 86400, 227900000 / 2, "mars", 6800 / sunSize * 10);
-var jupiterData = constructObjData(139822 / sunSize, 11.86, 0.41 / 86400, 778500000 / 2, "jupiter", 139822 / sunSize * 10);
-var saturnData = constructObjData(116464 / sunSize, 29.46, 0.44 / 86400, 1434000000 / 2, "saturn", 116464 / sunSize * 10);
-var uranusData = constructObjData(50724 / sunSize, 30.685, 0.72 / 86400, 2871000000 / 2, "uranus", 50724 / sunSize * 10);
-var neptuneData = constructObjData(49244 / sunSize, 60.190, 0.67 / 86400, 4495000000 / 2, "neptune", 49244 / sunSize * 10);
+var earthData = constructObjData(12742 / sunSize, 365.2564, 1 / 86400, 149600000 / 2, "Earth", 12742 / sunSize * 10);
+var moonData = constructObjData(3474 / sunSize, 27.5, 27 / 86400, 146000000 / 2, "Moon", 3474 / sunSize * 10);
+var marsData = constructObjData(6800 / sunSize, 689.98, 1026 / 86400, 227900000 / 2, "Mars", 6800 / sunSize * 10);
+var jupiterData = constructObjData(139822 / sunSize, 11.86, 0.41 / 86400, 778500000 / 2, "Jupiter", 139822 / sunSize * 10);
+var saturnData = constructObjData(116464 / sunSize, 29.46, 0.44 / 86400, 1434000000 / 2, "Saturn", 116464 / sunSize * 10);
+var uranusData = constructObjData(50724 / sunSize, 30.685, 0.72 / 86400, 2871000000 / 2, "Uranus", 50724 / sunSize * 10);
+var neptuneData = constructObjData(49244 / sunSize, 60.190, 0.67 / 86400, 4495000000 / 2, "Neptune", 49244 / sunSize * 10);
 var shipData = constructObjData(4880 / sunSize, 87.97, 58.65 / 86400, 57910000 / 2, "ship", 4880 / sunSize *10);
 var cameraOnShip = false;
-var asteroidsData = constructObjData(139822 / sunSize, 27.5, 0.01, 503200000, "asteroids", 139822 / sunSize * 10);
 
 var orbitData = { value: 1, runOrbit: true, runRotation: true };
 var clock = new THREE.Clock();
@@ -115,8 +114,8 @@ function movePlanet(myPlanet, myData, myTime, stopRotation) {
     }
     if (orbitData.runOrbit) {
         date = myTime * orbitData.value / (myData.orbitRate*200);
-        if (myData.name != "sun") {
-            if(myData.name == "earth"){
+        if (myData.name != "Sun") {
+            if(myData.name == "Earth"){
                 var temp = new THREE.Vector3(Math.cos(date) * myData.distanceFromAxis / 1000000,0,Math.sin(date) * myData.distanceFromAxis / 1000000)
                 myPlanet.position.set(temp.x,temp.y,temp.z);   
                 earthPosition=temp;
@@ -139,7 +138,7 @@ function moveMoon(myPlanet, myData, myTime) {
  
     if (orbitData.runOrbit) {
         date = myTime * orbitData.value / (myData.orbitRate*200);
-        if (myData.name != "sun") {
+        if (myData.name != "Sun") {
             myPlanet.position.set(
                 Math.cos(date) * (384400)/100000 +  earthPosition.x,
                 0,
@@ -164,7 +163,7 @@ function update(myPlanet, myData) {
         animation.init = time;
         animation.date = toDateTime(animation.init);
     }
-    if (myData.name != "moon") {
+    if (myData.name != "Moon") {
         movePlanet(myPlanet, myData, time);
     } else {
         moveMoon(myPlanet, myData, time);
@@ -264,14 +263,11 @@ function init() {
 
 
     // Create the GUI that displays controls.
-    var folder1 = gui.addFolder('light');
-    folder1.add(pointLight, 'intensity', 0, 10);
-    var folder3 = gui.addFolder('speed');
-    folder3.add(orbitData, 'value', 1, 10).step(1);
-    folder3.add(orbitData, 'runOrbit', 0, 1);
-    folder3.add(orbitData, 'runRotation', 0, 1);
-    var folder = gui.addFolder('Controls');
-    folder.add(distance_factor,'value', 0.1 ,2).name('Distance factor').listen();
+    var folder3 = gui.addFolder('Controls');
+    folder3.add(pointLight, 'intensity', 0, 10).name("Sunlight Intensity");
+    folder3.add(orbitData, 'value', 1, 10).step(1).name("Orbit Speed Value");
+    folder3.add(orbitData, 'runOrbit', 0, 1).name("Run Orbit");
+    folder3.add(orbitData, 'runRotation', 0, 1).name("Run Rotation");
 
     
     var folder5 = gui.addFolder('Spaceship');
@@ -279,8 +275,8 @@ function init() {
     // Start the animation.
     var folder6 = gui.addFolder('Animation ');
     folder6.add(animation ,'isActive',0,1);
-    folder6.add(animation ,'init').min(animation.init).max(animation.init+150000).onChange(function() {animation.date = toDateTime(animation.init)});
-    folder6.add(animation ,'date').listen();
+    folder6.add(animation ,'init').min(animation.init).max(animation.init+150000).onChange(function() {animation.date = toDateTime(animation.init)}).name("Initial Date");
+    folder6.add(animation ,'date').listen().name("Current Date");
     
 
 }
@@ -350,11 +346,11 @@ function moves(){
 // Start everything.
 init();
 function toDateTime(secs) {
-    var t = new Date(); // Epoch
-    t.setSeconds(secs);
-    var dd = t.getDate();
-    var mm = t.getMonth() + 1; //January is 0!
-
+    var t = new Date(1,1,1970); // Epoch
+    t.setSeconds(secs/1000);
+    //var dd = t.getDate();
+    //var mm = t.getMonth() + 1; //January is 0!
+/*
     var yyyy = t.getFullYear();
     if (dd < 10) {
     dd = '0' + dd;
@@ -362,7 +358,6 @@ function toDateTime(secs) {
     if (mm < 10) {
     mm = '0' + mm;
     } 
-    var t = dd + '/' + mm + '/' + yyyy;
-    console.log(t);
-    return t;
+    var t = dd + '/' + mm + '/' + yyyy;*/
+    return t.toLocaleString() ;
 }
